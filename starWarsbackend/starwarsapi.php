@@ -18,6 +18,7 @@ if ($_POST['findanswers']){
         $answers['firstAnswer'] = ($starWars->firstAnswer != '') ? $starWars->firstAnswer : $error;
         $answers['secondAnswer'] = ($starWars->secondAnswer != '') ? $starWars->secondAnswer : $error;
         $answers['thirdAnswer'] = ($starWars->thirdAnswer != '') ? $starWars->thirdAnswer : $error;
+        $answers['fourthAnswer'] = ($starWars->fourthAnswer != '') ? $starWars->fourthAnswer : $error;
     }
     echo json_encode($answers);
 }
