@@ -10,11 +10,13 @@ require_once 'StarWars.php';
 if ($_POST['findanswers']){
     $starWars = new StarWars();
     //Get The Answers
+    $starWars->FindAllAnswers();
     $error = "Something went Wrong";
     if ($starWars->error != ''){
         $answers['errors'] = $starWars->error;
     } else {
         $answers['firstAnswer'] = ($starWars->firstAnswer != '') ? $starWars->firstAnswer : $error;
+        $answers['secondAnswer'] = ($starWars->secondAnswer != '') ? $starWars->secondAnswer : $error;
     }
     echo json_encode($answers);
 }
