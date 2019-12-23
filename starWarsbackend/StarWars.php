@@ -148,4 +148,34 @@ class StarWars {
             arsort($this->vehicles);
         }
     }
+
+    /**
+     * @throws \MongoDB\Driver\Exception\Exception
+     */
+    public function FindAllAnswers(){
+        $this->findMostAppearedCharacter();
+    }
+
+    /**
+     * This Function is find out the most Appeared Characters in the Films
+     * @throws \MongoDB\Driver\Exception\Exception
+     */
+    public function findMostAppearedCharacter(){
+        $peoples = $this->getCollection("star-wars.people");
+        foreach ($peoples as $ppl) {
+            $this->people[$ppl->id] = $ppl->name;
+            $this->peoplePlanets[$ppl->homeworld][] = $ppl->id;
+        }
+        $maxcharCount = 0;
+        foreach ($this->filmChars as $charID => $char){
+            if ($maxcharCount == 0) {
+                $maxcharCount = $char;
+            }
+            if (($maxcharCount-3) < $char) {
+                $this->secondAnswer .= $this->people[$charID] .' ('.$char.') <br/>';
+            }
+        }
+    }
+
+
 }
