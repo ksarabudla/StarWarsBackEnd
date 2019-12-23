@@ -155,6 +155,7 @@ class StarWars {
     public function FindAllAnswers(){
         $this->findMostAppearedCharacter();
         $this->findSpeciesMostAppeared();
+        $this->findMostPilotsInPlanets();
     }
 
     /**
@@ -195,6 +196,57 @@ class StarWars {
             }
             if (($maxspeciCount-3) < $spec) {
                 $this->thirdAnswer .= $specis[$specieID] .' ('.$spec.') <br/>';
+            }
+        }
+    }
+
+    /**
+     * Find the Most Number of Pilots from each Planet of StarWar Universe
+     * @throws \MongoDB\Driver\Exception\Exception
+     */
+    public function findMostPilotsInPlanets(){
+        $planetRel = [];
+        $plnts = $this->getCollection("star-wars.planets");
+        foreach ($plnts as $plnt) {
+            $planetRel[$plnt->id] = $plnt->name;
+        }
+        $pilots = [];
+        $totalStarShips = $this->getCollection("star-wars.starships");
+        foreach ($totalStarShips as $totalStarShip) {
+            if (isset($this->starShips[$totalStarShip->id])) {
+                $pilots = array_merge($totalStarShip->pilots, $pilots);
+            }
+        }
+        $totalVehicles =$this->getCollection("star-wars.vehicles");
+        foreach ($totalVehicles as $totalVehicle) {
+            if (isset($this->vehicles[$totalVehicle->id])) {
+                $pilots = array_merge($totalVehicle->pilots, $pilots);
+            }
+        }
+        $planetPilots = [];
+        $pilots = array_unique($pilots);
+        foreach ($this->peoplePlanets as $planetid => $ppls){
+            $planetid = $planetRel[$planetid];
+            foreach ($pilots as $pilot){
+                if (in_array($pilot,  $ppls)){
+                    if (!isset($planetPilots[$planetid])){
+                        $planetPilots[$planetid] = 1;
+                    }else{
+                        $planetPilots[$planetid] += 1;
+                    }
+                    $planetPilotIds[$planetid][] = $this->people[$pilot];
+                }
+            }
+        }
+        arsort($planetPilots);
+        arsort($planetPilotIds);
+        $maxpilotCount = 0;
+        foreach ($planetPilots as $planetName => $pCount){
+            if ($maxpilotCount == 0) {
+                $maxpilotCount = $pCount;
+            }
+            if (($maxpilotCount-3) < $pCount) {
+                $this->fourthAnswer .= 'Planet: '.$planetName.' - Pilots: ('.$pCount.') '. implode(', ' , $planetPilotIds[$planetName]).'<br/>';
             }
         }
     }
