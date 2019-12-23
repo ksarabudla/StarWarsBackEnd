@@ -154,6 +154,7 @@ class StarWars {
      */
     public function FindAllAnswers(){
         $this->findMostAppearedCharacter();
+        $this->findSpeciesMostAppeared();
     }
 
     /**
@@ -173,6 +174,27 @@ class StarWars {
             }
             if (($maxcharCount-3) < $char) {
                 $this->secondAnswer .= $this->people[$charID] .' ('.$char.') <br/>';
+            }
+        }
+    }
+
+    /**
+     * This function is to Find out the Species appeared in the Films
+     * @throws \MongoDB\Driver\Exception\Exception
+     */
+    public function findSpeciesMostAppeared(){
+        $species = $this->getCollection("star-wars.species");
+        foreach ($species as $speci) {
+            $specis[$speci->id] = $speci->name;
+            $specisPeople[$speci->id] = $speci->people;
+        }
+        $maxspeciCount = 0;
+        foreach ($this->filmSpecies as $specieID => $spec){
+            if ($maxspeciCount == 0) {
+                $maxspeciCount = $spec;
+            }
+            if (($maxspeciCount-3) < $spec) {
+                $this->thirdAnswer .= $specis[$specieID] .' ('.$spec.') <br/>';
             }
         }
     }
